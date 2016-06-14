@@ -15,6 +15,7 @@ pub use self::calendar::Calendar;
 pub use self::calendar_event::CalendarEvent;
 pub use self::contact::Contact;
 pub use self::contact_group::ContactGroup;
+pub use self::alias::Alias;
 
 pub mod mailbox;
 pub mod message;
@@ -25,3 +26,4 @@ pub mod calendar;
 pub mod calendar_event;
 pub mod contact;
 pub mod contact_group;
+pub mod alias;
