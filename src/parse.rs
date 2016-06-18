@@ -50,6 +50,10 @@ impl<T> Presence<T> {
             Absent          => None,
         }
     }
+
+    pub fn unwrap(&self) -> &T {
+        self.as_option().unwrap()
+    }
 }
 impl<T> Default for Presence<T> {
     fn default() -> Presence<T> {

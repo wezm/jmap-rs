@@ -15,6 +15,7 @@ use contact::Contact;
 use contact_group::ContactGroup;
 use mailbox::Mailbox;
 use message::Message;
+use alias::Alias;
 
 use message_list::*;
 use message_import::*;
@@ -31,7 +32,7 @@ make_record_method_args_type!(GetRequestArgs, "GetRequestArgs",
 );
 
 make_record_method_args_type!(GetResponseArgs, "GetResponseArgs",
-    state:     String                  => "state",
+    state:     Option<String>          => "state",
     list:      Option<Vec<R::Partial>> => "list",
     not_found: Option<Vec<String>>     => "notFound"
 );
@@ -58,15 +59,19 @@ make_record_method_args_type!(SetRequestArgs, "SetRequestArgs",
     destroy:     Presence<Vec<String>>                 => "destroy"
 );
 
+pub type LocalId = String;
+pub type RemoteId = String;
+
 make_record_method_args_type!(SetResponseArgs, "SetResponseArgs",
-    old_state:     Option<String>              => "oldState",
-    new_state:     String                      => "newState",
-    created:       BTreeMap<String,R::Partial> => "created",
-    updated:       Vec<String>                 => "updated",
-    destroyed:     Vec<String>                 => "destroyed",
-    not_created:   BTreeMap<String,SetError>   => "notCreated",
-    not_updated:   BTreeMap<String,SetError>   => "notUpdated",
-    not_destroyed: BTreeMap<String,SetError>   => "notDestroyed"
+    old_state:     Option<String>                    => "oldState",
+    new_state:     Option<String>                    => "newState",
+    //created:       BTreeMap<String,R::Partial>       => "created",
+    created:       BTreeMap<LocalId,RemoteId>       => "created",
+    updated:       Vec<String>                       => "updated",
+    destroyed:     Vec<String>                       => "destroyed",
+    not_created:   Option<BTreeMap<String,SetError>> => "notCreated",
+    not_updated:   Option<BTreeMap<String,SetError>> => "notUpdated",
+    not_destroyed: Option<BTreeMap<String,SetError>> => "notDestroyed"
 );
 
 
@@ -238,6 +243,10 @@ pub trait ClientId {
 
 
 make_methods!(RequestMethod, "RequestMethod", RequestError,
+    GetAliases,              GetRequestArgs<Alias>                => "getAliases",
+    GetAliasUpdates,         GetUpdatesRequestArgs<Alias>         => "getAliasUpdates",
+    SetAliases,              SetRequestArgs<Alias>                => "setAliases",
+
     GetCalendars,            GetRequestArgs<Calendar>             => "getCalendars",
     GetCalendarUpdates,      GetUpdatesRequestArgs<Calendar>      => "getCalendarUpdates",
     SetCalendars,            SetRequestArgs<Calendar>             => "setCalendars",
@@ -272,6 +281,10 @@ make_methods!(RequestMethod, "RequestMethod", RequestError,
 );
 
 make_methods!(ResponseMethod, "ResponseMethod", ResponseError,
+    Aliases,              GetResponseArgs<Alias>                => "aliases",
+    AliasUpdates,         GetUpdatesResponseArgs<Alias>         => "aliasUpdates",
+    AliasesSet,           SetResponseArgs<Alias>                => "aliasesSet",
+
     Calendars,            GetResponseArgs<Calendar>             => "calendars",
     CalendarUpdates,      GetUpdatesResponseArgs<Calendar>      => "calendarUpdates",
     CalendarsSet,         SetResponseArgs<Calendar>             => "calendarsSet",

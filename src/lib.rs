@@ -17,6 +17,8 @@ pub use self::contact::Contact;
 pub use self::contact_group::ContactGroup;
 pub use self::alias::Alias;
 
+pub use rustc_serialize::json::{Json, ToJson};
+
 pub mod mailbox;
 pub mod message;
 pub mod message_list;

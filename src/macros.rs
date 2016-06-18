@@ -83,7 +83,7 @@ macro_rules! make_record_type {
         #[derive(Clone, PartialEq, Debug)]
         pub struct $record {
             id: String,
-            $($field: $ty),*
+            $(pub $field: $ty),*
         }
 
         impl Default for $record {
@@ -122,7 +122,7 @@ macro_rules! make_record_type {
         #[derive(Clone, PartialEq, Debug)]
         pub struct $partialrecord {
             id: Presence<String>,
-            $($field: Presence<$ty>),*
+            $(pub $field: Presence<$ty>),*
         }
 
         impl PartialRecord for $partialrecord {
